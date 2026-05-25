@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Nova-Cell</title>
+    <link rel="stylesheet" href="../css/modificaciones-index.css">
+    <meta charset="UTF-8">
+
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../html/nuestros-servicios.html">Nuestros Servicios</a></li>
+                <li><a href="sobre-nosotros.html">Sobre Nosotros</a></li>
+                <li><a href="ubicacion.html">Ubicacion </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="arriva-logo">
+        <a href="#footer" class="contacto">
+            <p class="contacto">Contáctanos</p>
+        </a>
+    </div>
+
+<section class="card">
+    <div class="descripcion-diagnostico">
+        <p class="descripcion">Detectá el problema de tu celular</p>
+        <button onclick="mostrarDiagnostico()" class="link-">Iniciar diagnóstico</button>
+    </div>
+</section>
+
+<div id="diagnostico-container" style="display:none; padding:20px;">
+    <!-- PEGÁ ACÁ TODO el contenido del otro archivo (diagnostico_celular.html) -->
+     <div class="wrap">
+<h2 class="sr-only" style="position:absolute;left:-9999px">Diagnóstico guiado de fallas en celulares</h2>
+
+<div class="header">
+  <div class="logo">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.5" stroke-linecap="round" stroke-width="3"/></svg>
+  </div>
+  <div class="title-block">
+    <h1>Diagnóstico de celulares</h1>
+    <p>Respondé las preguntas para identificar el problema</p>
+  </div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:5%"></div></div>
+
+<div id="trail" class="trail"></div>
+<div id="content"></div>
+</div>
+
+</div>  
+<script>
+function mostrarDiagnostico() {
+    const cont = document.getElementById("diagnostico-container");
+    cont.style.display = cont.style.display === "none" ? "block" : "none";
+}
+
+const tree = {
+  id: "root",
+  q: "¿Cuál es el síntoma principal del equipo?",
+  label: "Categoría del problema",
+  opts: [
+    {
+      label: "No enciende / sin respuesta",
+      next: {
+        q: "Cuando lo conectás al cargador, ¿qué pasa?",
+        label: "Sin encendido",
+        opts: [
+          { label: "No muestra nada en pantalla", result: { title: "Falla de pantalla o energía", desc: "Revisar batería o pantalla" } },
+          { label: "Muestra logo y se reinicia", result: { title: "Bootloop", desc: "Problema de software" } }
+        ]
+      }
+    },
+    {
+      label: "Pantalla con fallas",
+      result: { title: "Pantalla dañada", desc: "Reemplazar módulo" }
+    }
+  ]
+};
+
+let current = tree;
+
+function renderStep(node) {
+  const c = document.getElementById("content");
+  const opts = node.opts.map((o, i) => `
+    <button onclick="choose(${i})">${o.label}</button>
+  `).join("");
+
+  c.innerHTML = `
+    <h3>${node.q}</h3>
+    ${opts}
+  `;
+}
+
+function choose(i) {
+  const opt = current.opts[i];
+  if (opt.result) {
+    document.getElementById("content").innerHTML = `
+      <h3>${opt.result.title}</h3>
+      <p>${opt.result.desc}</p>
+      <button onclick="reset()">Volver a empezar</button>
+    `;
+  } else {
+    current = opt.next;
+    renderStep(current);
+  }
+}
+
+function reset() {
+  current = tree;
+  renderStep(current);
+}
+
+renderStep(current);
+
+
+</script>
+
+</body>
+    
+<footer  id="footer">
+
+    <div class="footer-container">
+
+        <p>© 2026 Nova-Cell Todos los derechos reservados.</p>
+        <p>
+            Seguinos en:
+            <a href="#">Facebook</a> •
+            <a href="https://www.instagram.com/novacell_donorione?igsh=MTY0djA1d2NsZ2F5OA%3D%3D&utm_source=qr">Instagram</a> •
+            <a href="https://whatsapp.com/dl/">WhatAapp </a>
+        </p>
+    </div>
+
+
+</footer>
